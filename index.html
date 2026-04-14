@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bråkjämföraren</title>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#f6f4ff;--surface:#fff;--surface2:#eae6ff;--border:#ccc5f0;
+  --text:#100e28;--muted:#585078;--accent:#306BF0;--accent2:#EC6095;
+  --correct:#18a348;--wrong:#e02020;--shadow:rgba(48,107,240,.10);
+  --seg-border:#7060c0;
+}
+body{font-family:'Sora',sans-serif;background:var(--bg);color:var(--text);font-size:14px}
+.wrap{padding:1.25rem 1rem 2rem;max-width:720px;margin:0 auto}
+h1{font-family:'Playfair Display',serif;font-size:20px;font-weight:700;margin-bottom:1.25rem}
+
+.top-bar{display:flex;align-items:center;gap:12px;margin-bottom:1.25rem}
+.top-bar label{font-size:12px;color:var(--muted)}
+select{font-size:13px;padding:5px 10px;border:1.5px solid var(--border);border-radius:10px;background:var(--surface);color:var(--text);font-family:'Sora',sans-serif;cursor:pointer}
+
+.frac-list{display:flex;flex-direction:column;gap:12px;margin-bottom:1.25rem}
+
+/* === BRÅK-RAD === */
+.frac-row{
+  background:var(--surface);border:1.5px solid var(--border);
+  border-radius:14px;padding:1rem 1.1rem;
+  display:flex;align-items:center;gap:18px;
+  box-shadow:0 2px 10px var(--shadow);
+}
+
+/* Inmatningskolumn — kompakt till vänster */
+.col-inputs{
+  display:flex;flex-direction:column;align-items:center;gap:0;
+  flex-shrink:0;width:56px;
+}
+.num-box{
+  width:48px;height:44px;border-radius:9px;border:1.5px solid var(--border);
+  background:var(--surface2);color:var(--text);
+  font-family:'Playfair Display',serif;font-size:20px;font-weight:700;
+  text-align:center;padding:0;
+  -moz-appearance:textfield;
+}
+.num-box::-webkit-inner-spin-button,.num-box::-webkit-outer-spin-button{-webkit-appearance:none}
+.num-box:focus{outline:2px solid var(--accent);border-color:var(--accent)}
+.frac-divider{width:44px;height:2.5px;background:var(--accent);border-radius:2px;margin:4px 0;opacity:.7}
+.num-label{font-size:9px;color:var(--muted);text-align:center;margin-top:2px}
+
+/* Stapelkolumn — tar nästan all plats */
+.col-bar{
+  display:flex;flex-direction:column;gap:8px;
+  flex:1;
+}
+.bar-track{
+  height:64px;border-radius:10px;
+  border:2px solid var(--border);
+  background:var(--surface2);
+  display:flex;overflow:hidden;width:100%;
+}
+
+/* Segment-stil: tydlig separator */
+.seg{
+  height:100%;
+  flex:1;
+  transition:background .2s;
+  position:relative;
+}
+/* Separator-linjer mellan segment — mörk när tom, ljus när fylld */
+.seg+.seg{
+  border-left:2.5px solid var(--seg-border);
+}
+.seg.filled+.seg.filled{
+  border-left:2.5px solid rgba(255,255,255,0.5);
+}
+.seg.filled+.seg.empty{
+  border-left:2.5px solid var(--seg-border);
+}
+.seg.filled{background:var(--accent)}
+.seg.empty{background:var(--surface2)}
+
+/* Fas-knappar */
+.phase-btns{display:flex;gap:6px}
+.pb{
+  font-size:11px;padding:4px 12px;border-radius:8px;
+  border:1.5px solid var(--border);background:var(--surface);
+  color:var(--muted);cursor:pointer;font-family:'Sora',sans-serif;
+  transition:all .15s;white-space:nowrap;
+}
+.pb.on{background:var(--accent2);color:#fff;border-color:var(--accent2)}
+.pb:hover:not(.on){background:var(--surface2)}
+.reset-btn{
+  font-size:11px;padding:4px 12px;border-radius:8px;
+  border:1.5px solid var(--border);background:var(--surface);
+  color:var(--muted);cursor:pointer;font-family:'Sora',sans-serif;
+  transition:all .15s;white-space:nowrap;margin-left:auto;
+}
+.reset-btn:hover{background:#fde8ef;border-color:var(--accent2);color:var(--accent2)}
+
+/* Svar-område */
+.answer-area{
+  background:var(--surface);border:1.5px solid var(--border);
+  border-radius:14px;padding:.9rem 1rem;
+  display:flex;align-items:center;gap:12px;
+  box-shadow:0 2px 10px var(--shadow);
+}
+.reveal-btn{
+  font-size:13px;padding:7px 18px;border-radius:10px;border:none;
+  background:var(--accent);color:#fff;font-family:'Sora',sans-serif;
+  font-weight:600;cursor:pointer;transition:opacity .15s;white-space:nowrap;
+}
+.reveal-btn:hover{opacity:.88}
+.reveal-btn.hide-btn{background:var(--surface2);color:var(--muted);border:1.5px solid var(--border)}
+.answer-content{flex:1;text-align:center}
+.answer-main{font-family:'Playfair Display',serif;font-size:17px;font-weight:700;color:var(--correct);opacity:0;transition:opacity .3s}
+.answer-main.visible{opacity:1}
+.answer-sub{font-size:12px;color:var(--muted);margin-top:2px;opacity:0;transition:opacity .3s}
+.answer-sub.visible{opacity:1}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Bråkjämföraren</h1>
+  <div class="top-bar">
+    <label>Antal bråk:</label>
+    <select id="countSel">
+      <option value="2">2 bråk</option>
+      <option value="3">3 bråk</option>
+    </select>
+  </div>
+  <div class="frac-list" id="fracList"></div>
+  <div class="answer-area">
+    <button class="reveal-btn" id="revealBtn" onclick="toggleAnswer()">Visa svar</button>
+    <div class="answer-content">
+      <div class="answer-main" id="answerMain"></div>
+      <div class="answer-sub" id="answerSub"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+let count = 2;
+let fracs = [{n:7,d:8},{n:6,d:7},{n:2,d:3}];
+let phases = [{delar:false,taljare:false},{delar:false,taljare:false},{delar:false,taljare:false}];
+let shown = false;
+
+document.getElementById('countSel').addEventListener('change', function(){
+  count = +this.value; hideAnswer(); render();
+});
+
+function hideAnswer(){
+  shown = false;
+  document.getElementById('answerMain').classList.remove('visible');
+  document.getElementById('answerSub').classList.remove('visible');
+  document.getElementById('revealBtn').textContent = 'Visa svar';
+  document.getElementById('revealBtn').classList.remove('hide-btn');
+}
+
+function toggleAnswer(){
+  shown = !shown;
+  document.getElementById('answerMain').classList.toggle('visible', shown);
+  document.getElementById('answerSub').classList.toggle('visible', shown);
+  document.getElementById('revealBtn').textContent = shown ? 'Dölj svar' : 'Visa svar';
+  document.getElementById('revealBtn').classList.toggle('hide-btn', shown);
+}
+
+function buildAnswer(){
+  let vals = fracs.slice(0, count).map((f,i) => ({val:f.n/f.d, i, f}));
+  let maxV = Math.max(...vals.map(v => v.val));
+  let winners = vals.filter(v => Math.abs(v.val - maxV) < 1e-9);
+  let sf = f => `${f.n}/${f.d}`;
+  let ineq = '';
+  for(let i = 0; i < count; i++){
+    ineq += sf(fracs[i]);
+    if(i < count-1){
+      let a = fracs[i].n/fracs[i].d, b = fracs[i+1].n/fracs[i+1].d;
+      ineq += a < b ? ' < ' : a > b ? ' > ' : ' = ';
+    }
+  }
+  let hint = '';
+  if(count === 2){
+    let a = fracs[0], b = fracs[1];
+    if(a.d === b.d) hint = 'Samma nämnare → lika stora bitar → jämför täljarna';
+    else if(a.n === b.n) hint = 'Samma täljare → lika många bitar → jämför nämnarna (fler delar = mindre bitar)';
+    else hint = 'Olika täljare och nämnare → jämför storlekarna i bilden';
+  }
+  document.getElementById('answerMain').textContent =
+    winners.length === count
+      ? 'Bråken är lika stora!'
+      : winners.map(w => `Bråk ${w.i+1} (${sf(w.f)})`).join(' & ') + ' är störst';
+  document.getElementById('answerSub').textContent = ineq + (hint ? ' · ' + hint : '');
+}
+
+function setVal(idx, type, raw){
+  let v = Math.max(1, Math.min(12, +raw || 1));
+  if(type === 'd') fracs[idx].d = v;
+  else fracs[idx].n = Math.min(v, fracs[idx].d);
+  hideAnswer();
+  renderBar(idx);
+  renderInputs(idx);
+  buildAnswer();
+}
+
+function resetPhase(idx){
+  phases[idx].delar = false;
+  phases[idx].taljare = false;
+  renderBar(idx);
+  document.getElementById('pbD'+idx).classList.remove('on');
+  document.getElementById('pbT'+idx).classList.remove('on');
+}
+
+function setPhase(idx, type){
+  if(type === 'delar'){
+    phases[idx].delar = !phases[idx].delar;
+    if(!phases[idx].delar) phases[idx].taljare = false;
+  } else {
+    if(!phases[idx].delar) phases[idx].delar = true;
+    phases[idx].taljare = !phases[idx].taljare;
+  }
+  renderBar(idx);
+  document.getElementById('pbD'+idx).classList.toggle('on', phases[idx].delar);
+  document.getElementById('pbT'+idx).classList.toggle('on', phases[idx].taljare);
+}
+
+function renderBar(idx){
+  let bar = document.getElementById('bar'+idx);
+  let f = fracs[idx];
+  let p = phases[idx];
+  bar.innerHTML = '';
+  if(!p.delar){
+    let s = document.createElement('div');
+    s.style.cssText = 'flex:1;background:var(--surface2)';
+    bar.appendChild(s);
+    return;
+  }
+  for(let s = 0; s < f.d; s++){
+    let seg = document.createElement('div');
+    seg.className = 'seg ' + (p.taljare && s < f.n ? 'filled' : 'empty');
+    bar.appendChild(seg);
+  }
+}
+
+function renderInputs(idx){
+  let f = fracs[idx];
+  let nn = document.getElementById('nd'+idx);
+  let dn = document.getElementById('dd'+idx);
+  if(nn) nn.value = f.n;
+  if(dn) dn.value = f.d;
+}
+
+function render(){
+  let list = document.getElementById('fracList');
+  list.innerHTML = '';
+  for(let i = 0; i < count; i++){
+    let f = fracs[i];
+    let row = document.createElement('div');
+    row.className = 'frac-row';
+    row.id = 'row'+i;
+    row.innerHTML = `
+      <div class="col-inputs">
+        <input class="num-box" type="number" id="nd${i}" min="1" max="12" value="${f.n}"
+          oninput="setVal(${i},'n',this.value)" onchange="setVal(${i},'n',this.value)">
+        <div class="frac-divider"></div>
+        <input class="num-box" type="number" id="dd${i}" min="1" max="12" value="${f.d}"
+          oninput="setVal(${i},'d',this.value)" onchange="setVal(${i},'d',this.value)">
+      </div>
+      <div class="col-bar">
+        <div class="bar-track" id="bar${i}">
+          <div style="flex:1;background:var(--surface2)"></div>
+        </div>
+        <div class="phase-btns">
+          <button class="pb" id="pbD${i}" onclick="setPhase(${i},'delar')">Dela upp</button>
+          <button class="pb" id="pbT${i}" onclick="setPhase(${i},'taljare')">Välj delar</button>
+          <button class="reset-btn" onclick="resetPhase(${i})">Nollställ</button>
+        </div>
+      </div>`;
+    list.appendChild(row);
+    renderBar(i);
+  }
+  buildAnswer();
+}
+
+render();
+</script>
+</body>
+</html>
