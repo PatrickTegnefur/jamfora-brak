@@ -10,80 +10,92 @@
 :root{
   --bg:#f6f4ff;--surface:#fff;--surface2:#eae6ff;--border:#ccc5f0;
   --text:#100e28;--muted:#585078;--accent:#306BF0;--accent2:#EC6095;
-  --correct:#18a348;--wrong:#e02020;--shadow:rgba(48,107,240,.10);
+  --correct:#18a348;--shadow:rgba(48,107,240,.10);
   --seg-border:#7060c0;
+  --ref-half:#f0a020;--ref-quarter:#20b090;--ref-three-q:#c040d0;--ref-one:#e02020;
 }
-body{font-family:'Sora',sans-serif;background:var(--bg);color:var(--text);font-size:14px}
-.wrap{padding:1.25rem 1rem 2rem;max-width:720px;margin:0 auto}
-h1{font-family:'Playfair Display',serif;font-size:20px;font-weight:700;margin-bottom:1.25rem}
+body{font-family:'Sora',sans-serif;background:var(--bg);color:var(--text);font-size:15px}
+.wrap{padding:1.5rem 1.25rem 3rem;max-width:860px;margin:0 auto}
+h1{font-family:'Playfair Display',serif;font-size:24px;font-weight:700;margin-bottom:1.4rem}
 
-.top-bar{display:flex;align-items:center;gap:12px;margin-bottom:1.25rem}
-.top-bar label{font-size:12px;color:var(--muted)}
-select{font-size:13px;padding:5px 10px;border:1.5px solid var(--border);border-radius:10px;background:var(--surface);color:var(--text);font-family:'Sora',sans-serif;cursor:pointer}
+/* TOP BAR */
+.top-bar{display:flex;align-items:center;gap:14px;margin-bottom:1.4rem;flex-wrap:wrap}
+.top-bar label{font-size:13px;color:var(--muted)}
+select{font-size:14px;padding:6px 12px;border:1.5px solid var(--border);border-radius:10px;background:var(--surface);color:var(--text);font-family:'Sora',sans-serif;cursor:pointer}
 
-.frac-list{display:flex;flex-direction:column;gap:12px;margin-bottom:1.25rem}
+/* STRATEGY BADGE */
+.strategy-badge{
+  margin-left:auto;padding:6px 14px;border-radius:10px;font-size:12px;font-weight:600;
+  border:1.5px solid var(--border);background:var(--surface);color:var(--muted);
+  display:flex;align-items:center;gap:7px;
+}
 
-/* === BRÅK-RAD === */
+.strategy-badge .s-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+.s1-dot{background:#306BF0}.s2-dot{background:#EC6095}.s3-dot{background:#f0a020}
+
+/* FRAC LIST 
+.frac-list{display:flex;flex-direction:column;gap:14px;margin-bottom:1.4rem}
+*/
+/* BRÅK-RAD */
 .frac-row{
   background:var(--surface);border:1.5px solid var(--border);
-  border-radius:14px;padding:1rem 1.1rem;
-  display:flex;align-items:center;gap:18px;
-  box-shadow:0 2px 10px var(--shadow);
+  border-radius:16px;padding:1.1rem 1.25rem;
+  display:flex;align-items:center;gap:20px;
+  box-shadow:0 2px 12px var(--shadow);
 }
 
-/* Inmatningskolumn — kompakt till vänster */
+/* Inmatning */
 .col-inputs{
   display:flex;flex-direction:column;align-items:center;gap:0;
-  flex-shrink:0;width:56px;
+  flex-shrink:0;width:60px;
 }
 .num-box{
-  width:48px;height:44px;border-radius:9px;border:1.5px solid var(--border);
+  width:54px;height:48px;border-radius:10px;border:1.5px solid var(--border);
   background:var(--surface2);color:var(--text);
-  font-family:'Playfair Display',serif;font-size:20px;font-weight:700;
+  font-family:'Playfair Display',serif;font-size:22px;font-weight:700;
   text-align:center;padding:0;
-  -moz-appearance:textfield;
 }
-.num-box::-webkit-inner-spin-button,.num-box::-webkit-outer-spin-button{-webkit-appearance:none}
 .num-box:focus{outline:2px solid var(--accent);border-color:var(--accent)}
-.frac-divider{width:44px;height:2.5px;background:var(--accent);border-radius:2px;margin:4px 0;opacity:.7}
-.num-label{font-size:9px;color:var(--muted);text-align:center;margin-top:2px}
+.frac-divider{width:50px;height:2.5px;background:var(--accent);border-radius:2px;margin:5px 0;opacity:.7}
 
-/* Stapelkolumn — tar nästan all plats */
-.col-bar{
-  display:flex;flex-direction:column;gap:8px;
-  flex:1;
-}
+/* Stapelkolumn */
+.col-bar{display:flex;flex-direction:column;gap:10px;flex:1;min-width:0}
+
+/* Stapel + referenslinjer */
+.bar-wrap{position:relative;width:100%}
 .bar-track{
-  height:64px;border-radius:10px;
+  height:72px;border-radius:11px;
   border:2px solid var(--border);
   background:var(--surface2);
   display:flex;overflow:hidden;width:100%;
 }
 
-/* Segment-stil: tydlig separator */
-.seg{
-  height:100%;
-  flex:1;
-  transition:background .2s;
-  position:relative;
-}
-/* Separator-linjer mellan segment — mörk när tom, ljus när fylld */
-.seg+.seg{
-  border-left:2.5px solid var(--seg-border);
-}
-.seg.filled+.seg.filled{
-  border-left:2.5px solid rgba(255,255,255,0.5);
-}
-.seg.filled+.seg.empty{
-  border-left:2.5px solid var(--seg-border);
-}
+/* Segment */
+.seg{height:100%;flex:1;transition:background .2s}
+.seg+.seg{border-left:2.5px solid var(--seg-border)}
+.seg.filled+.seg.filled{border-left:2.5px solid rgba(255,255,255,0.45)}
+.seg.filled+.seg.empty{border-left:2.5px solid var(--seg-border)}
 .seg.filled{background:var(--accent)}
 .seg.empty{background:var(--surface2)}
 
+/* Referenslinjer */
+.ref-lines{
+  position:absolute;top:0;left:0;right:0;bottom:0;
+  pointer-events:none;
+}
+.ref-line{
+  position:absolute;top:0;bottom:0;width:2.5px;margin-left:-1px;
+  opacity:.85;
+}
+.ref-label{
+  position:absolute;top:-18px;font-size:10px;font-weight:600;
+  transform:translateX(-50%);white-space:nowrap;
+}
+
 /* Fas-knappar */
-.phase-btns{display:flex;gap:6px}
+.phase-btns{display:flex;gap:7px;flex-wrap:wrap}
 .pb{
-  font-size:11px;padding:4px 12px;border-radius:8px;
+  font-size:12px;padding:5px 13px;border-radius:8px;
   border:1.5px solid var(--border);background:var(--surface);
   color:var(--muted);cursor:pointer;font-family:'Sora',sans-serif;
   transition:all .15s;white-space:nowrap;
@@ -91,183 +103,424 @@ select{font-size:13px;padding:5px 10px;border:1.5px solid var(--border);border-r
 .pb.on{background:var(--accent2);color:#fff;border-color:var(--accent2)}
 .pb:hover:not(.on){background:var(--surface2)}
 .reset-btn{
-  font-size:11px;padding:4px 12px;border-radius:8px;
+  font-size:12px;padding:5px 13px;border-radius:8px;
   border:1.5px solid var(--border);background:var(--surface);
   color:var(--muted);cursor:pointer;font-family:'Sora',sans-serif;
   transition:all .15s;white-space:nowrap;margin-left:auto;
 }
 .reset-btn:hover{background:#fde8ef;border-color:var(--accent2);color:var(--accent2)}
 
-/* Svar-område */
-.answer-area{
+/* REFERENSLINJE-KONTROLLER */
+.ref-controls{
   background:var(--surface);border:1.5px solid var(--border);
-  border-radius:14px;padding:.9rem 1rem;
-  display:flex;align-items:center;gap:12px;
+  border-radius:14px;padding:.85rem 1.1rem;
+  margin-bottom:1.4rem;
   box-shadow:0 2px 10px var(--shadow);
 }
+.ref-controls-title{font-size:12px;font-weight:600;color:var(--muted);margin-bottom:.6rem;text-transform:uppercase;letter-spacing:.04em}
+.ref-toggle-row{display:flex;gap:8px;flex-wrap:wrap}
+.ref-toggle{
+  font-size:12px;padding:4px 13px;border-radius:8px;cursor:pointer;
+  font-family:'Sora',sans-serif;transition:all .15s;white-space:nowrap;
+  border:2px solid;background:var(--surface);
+}
+.ref-toggle.on{color:#fff}
+.rt-half{border-color:var(--ref-half);color:var(--ref-half)}
+.rt-half.on{background:var(--ref-half)}
+.rt-quarter{border-color:var(--ref-quarter);color:var(--ref-quarter)}
+.rt-quarter.on{background:var(--ref-quarter)}
+.rt-threeq{border-color:var(--ref-three-q);color:var(--ref-three-q)}
+.rt-threeq.on{background:var(--ref-three-q)}
+.rt-one{border-color:var(--ref-one);color:var(--ref-one)}
+.rt-one.on{background:var(--ref-one)}
+
+/* STRATEGI-PANEL */
+.strategy-panel{
+  background:var(--surface);border:1.5px solid var(--border);
+  border-radius:14px;padding:.85rem 1.1rem;
+  margin-bottom:1.4rem;
+  box-shadow:0 2px 10px var(--shadow);
+}
+.strategy-panel-title{font-size:12px;font-weight:600;color:var(--muted);margin-bottom:.7rem;text-transform:uppercase;letter-spacing:.04em}
+.strategy-list{display:flex;flex-direction:column;gap:7px}
+.strategy-item{
+  display:flex;align-items:flex-start;gap:10px;padding:8px 11px;
+  border-radius:10px;border:1.5px solid var(--border);
+  background:var(--bg);font-size:13px;
+}
+.strategy-item.active{border-color:var(--accent);background:#eef3ff}
+.s-num{
+  font-family:'Playfair Display',serif;font-size:16px;font-weight:700;
+  flex-shrink:0;color:var(--accent);width:20px;
+}
+.s-text strong{font-weight:600;display:block;margin-bottom:1px}
+.s-text span{font-size:12px;color:var(--muted)}
+
+/* SVAR */
+.answer-area{
+  background:var(--surface);border:1.5px solid var(--border);
+  border-radius:14px;padding:1rem 1.1rem;
+  margin-bottom:1.4rem;
+  box-shadow:0 2px 10px var(--shadow);
+}
+.answer-top{display:flex;align-items:center;gap:14px;margin-bottom:.6rem}
 .reveal-btn{
-  font-size:13px;padding:7px 18px;border-radius:10px;border:none;
+  font-size:14px;padding:8px 20px;border-radius:10px;border:none;
   background:var(--accent);color:#fff;font-family:'Sora',sans-serif;
   font-weight:600;cursor:pointer;transition:opacity .15s;white-space:nowrap;
 }
 .reveal-btn:hover{opacity:.88}
 .reveal-btn.hide-btn{background:var(--surface2);color:var(--muted);border:1.5px solid var(--border)}
-.answer-content{flex:1;text-align:center}
-.answer-main{font-family:'Playfair Display',serif;font-size:17px;font-weight:700;color:var(--correct);opacity:0;transition:opacity .3s}
+.answer-main{font-family:'Playfair Display',serif;font-size:18px;font-weight:700;color:var(--correct);opacity:0;transition:opacity .3s}
 .answer-main.visible{opacity:1}
-.answer-sub{font-size:12px;color:var(--muted);margin-top:2px;opacity:0;transition:opacity .3s}
-.answer-sub.visible{opacity:1}
+.answer-details{opacity:0;transition:opacity .3s;display:flex;flex-direction:column;gap:6px}
+.answer-details.visible{opacity:1}
+.answer-ineq{font-size:13px;color:var(--muted)}
+.answer-hint{
+  font-size:12px;padding:5px 10px;border-radius:8px;
+  background:var(--surface2);color:var(--text);display:inline-block;
+}
+.decimals-row{display:flex;gap:10px;flex-wrap:wrap;margin-top:2px}
+.dec-chip{
+  font-size:12px;padding:4px 10px;border-radius:7px;
+  border:1.5px solid var(--border);background:var(--bg);color:var(--text);
+}
+.dec-chip strong{font-family:'Playfair Display',serif;font-size:13px}
+
+/* RITYTA */
+.canvas-section{
+  background:var(--surface);border:1.5px solid var(--border);
+  border-radius:14px;padding:.85rem 1.1rem;
+  box-shadow:0 2px 10px var(--shadow);
+}
+.canvas-header{display:flex;align-items:center;gap:10px;margin-bottom:.7rem;flex-wrap:wrap}
+.canvas-title{font-size:12px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;flex:1}
+.canvas-tools{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.ct-btn{
+  font-size:11px;padding:3px 10px;border-radius:7px;
+  border:1.5px solid var(--border);background:var(--surface);
+  color:var(--muted);cursor:pointer;font-family:'Sora',sans-serif;transition:all .15s;
+}
+.ct-btn:hover{background:var(--surface2)}
+.ct-btn.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+.color-dot{
+  width:22px;height:22px;border-radius:50%;cursor:pointer;
+  border:2px solid transparent;transition:border-color .15s;flex-shrink:0;
+}
+.color-dot.active{border-color:var(--text)}
+.size-sel{font-size:12px;padding:3px 7px;border-radius:7px;border:1.5px solid var(--border);background:var(--surface);font-family:'Sora',sans-serif;cursor:pointer}
+canvas#drawCanvas{
+  display:block;width:100%;height:260px;border-radius:10px;
+  border:1.5px solid var(--border);background:#fff;
+  cursor:crosshair;touch-action:none;
+}
 </style>
 </head>
 <body>
 <div class="wrap">
   <h1>Bråkjämföraren</h1>
+
   <div class="top-bar">
     <label>Antal bråk:</label>
     <select id="countSel">
       <option value="2">2 bråk</option>
       <option value="3">3 bråk</option>
     </select>
-  </div>
-  <div class="frac-list" id="fracList"></div>
-  <div class="answer-area">
-    <button class="reveal-btn" id="revealBtn" onclick="toggleAnswer()">Visa svar</button>
-    <div class="answer-content">
-      <div class="answer-main" id="answerMain"></div>
-      <div class="answer-sub" id="answerSub"></div>
+    <div class="strategy-badge" id="stratBadge">
+      <span class="s-dot" id="stratDot"></span>
+      <span id="stratText">Välj bråk för att se strategi</span>
     </div>
   </div>
+
+  <div class="frac-list" id="fracList"></div>
+
+  <!-- Referenslinjer -->
+  <div class="ref-controls">
+    
+    <div class="ref-controls-title">Jämförelselinjer</div>
+    <div class="ref-toggle-row">
+      <button class="ref-toggle rt-quarter" id="rt-quarter" onclick="toggleRef('quarter')">¼</button>
+      <button class="ref-toggle rt-half"    id="rt-half"    onclick="toggleRef('half')">½</button>
+      <button class="ref-toggle rt-threeq"  id="rt-threeq"  onclick="toggleRef('threeq')">¾</button>
+      <button class="ref-toggle rt-one"     id="rt-one"     onclick="toggleRef('one')">1 hel</button>
+    </div>
+  </div>
+
+ 
+
+  <!-- Svar -->
+  <div class="answer-area">
+    <div class="answer-top">
+      <button class="reveal-btn" id="revealBtn" onclick="toggleAnswer()">Visa svar</button>
+      <div class="answer-main" id="answerMain"></div>
+      
+    </div>
+    <div class="answer-details" id="answerDetails">
+      <div class="answer-ineq" id="answerIneq"></div>
+      <div class="decimals-row" id="decimalsRow"></div>
+      <div class="answer-hint" id="answerHint"></div>
+    </div>
+  </div>
+
+ Strategi-panel
+  <div class="strategy-panel">
+    <div class="strategy-panel-title">Jämförelsestrategier</div>
+    <div class="strategy-list">
+      <div class="strategy-item" id="s1">
+        <div class="s-num">1</div>
+        <div class="s-text">
+          <strong>Samma nämnare</strong>
+          <span>Bitarna är lika stora → täljaren bestämmer (fler bitar = större bråk)</span>
+        </div>
+      </div>
+      <div class="strategy-item" id="s2">
+        <div class="s-num">2</div>
+        <div class="s-text">
+          <strong>Samma täljare</strong>
+          <span>Antalet bitar är lika → nämnaren bestämmer (fler delar = mindre bitar)</span>
+        </div>
+      </div>
+      <div class="strategy-item" id="s3">
+        <div class="s-num">3</div>
+        <div class="s-text">
+          <strong>Olika täljare och nämnare</strong>
+          <span>Jämför mot kända värden: ½, ¾, 1 hel — vilket bråk ligger närmast vad?</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+  <!-- Rityta
+  <div class="canvas-section">
+    <div class="canvas-header">
+      <div class="canvas-title">Rityta</div>
+      <div class="canvas-tools">
+        <button class="ct-btn active" id="toolPen" onclick="setTool('pen')">✏️ Rita</button>
+        <button class="ct-btn" id="toolEraser" onclick="setTool('eraser')">⬜ Sudd</button>
+        <div class="color-dot active" style="background:#306BF0" onclick="setColor('#306BF0')" title="Blå"></div>
+        <div class="color-dot" style="background:#e02020" onclick="setColor('#e02020')" title="Röd"></div>
+        <div class="color-dot" style="background:#18a348" onclick="setColor('#18a348')" title="Grön"></div>
+        <div class="color-dot" style="background:#100e28" onclick="setColor('#100e28')" title="Svart"></div>
+        <select class="size-sel" id="sizeSel" onchange="setSize(+this.value)">
+          <option value="2">Tunn</option>
+          <option value="4" selected>Normal</option>
+          <option value="8">Tjock</option>
+        </select>
+        <button class="ct-btn" onclick="clearCanvas()">🗑 Rensa</button>
+      </div>
+    </div>
+    <canvas id="drawCanvas"></canvas>
+  </div> -->
 </div>
 
 <script>
+// ── STATE ────────────────────────────────────────────────
 let count = 2;
 let fracs = [{n:7,d:8},{n:6,d:7},{n:2,d:3}];
-let phases = [{delar:false,taljare:false},{delar:false,taljare:false},{delar:false,taljare:false}];
+let phases = Array.from({length:3},()=>({delar:false,taljare:false}));
 let shown = false;
+let refs = {half:false, quarter:false, threeq:false, one:false};
 
-document.getElementById('countSel').addEventListener('change', function(){
-  count = +this.value; hideAnswer(); render();
+const refDefs = {
+  quarter:{val:.25,  color:'var(--ref-quarter)', label:'¼'},
+  half:   {val:.5,   color:'var(--ref-half)',    label:'½'},
+  threeq: {val:.75,  color:'var(--ref-three-q)', label:'¾'},
+  one:    {val:.999, color:'var(--ref-one)',      label:'1'},
+};
+
+// ── COUNT SELECT ─────────────────────────────────────────
+document.getElementById('countSel').addEventListener('change',function(){
+  count=+this.value; hideAnswer(); render();
 });
 
+// ── REFERENCES ───────────────────────────────────────────
+function toggleRef(key){
+  refs[key]=!refs[key];
+  document.getElementById('rt-'+key).classList.toggle('on',refs[key]);
+  renderAllBars();
+}
+
+// ── ANSWER ───────────────────────────────────────────────
 function hideAnswer(){
-  shown = false;
+  shown=false;
   document.getElementById('answerMain').classList.remove('visible');
-  document.getElementById('answerSub').classList.remove('visible');
-  document.getElementById('revealBtn').textContent = 'Visa svar';
+  document.getElementById('answerDetails').classList.remove('visible');
+  document.getElementById('revealBtn').textContent='Visa svar';
   document.getElementById('revealBtn').classList.remove('hide-btn');
 }
 
 function toggleAnswer(){
-  shown = !shown;
-  document.getElementById('answerMain').classList.toggle('visible', shown);
-  document.getElementById('answerSub').classList.toggle('visible', shown);
-  document.getElementById('revealBtn').textContent = shown ? 'Dölj svar' : 'Visa svar';
-  document.getElementById('revealBtn').classList.toggle('hide-btn', shown);
+  shown=!shown;
+  document.getElementById('answerMain').classList.toggle('visible',shown);
+  document.getElementById('answerDetails').classList.toggle('visible',shown);
+  document.getElementById('revealBtn').textContent=shown?'Dölj svar':'Visa svar';
+  document.getElementById('revealBtn').classList.toggle('hide-btn',shown);
+}
+
+function fmt(n,d){
+  // Decimal, up to 4 significant digits, strip trailing zeros
+  let v=n/d;
+  let s=v.toFixed(4).replace(/\.?0+$/,'');
+  return s;
 }
 
 function buildAnswer(){
-  let vals = fracs.slice(0, count).map((f,i) => ({val:f.n/f.d, i, f}));
-  let maxV = Math.max(...vals.map(v => v.val));
-  let winners = vals.filter(v => Math.abs(v.val - maxV) < 1e-9);
-  let sf = f => `${f.n}/${f.d}`;
-  let ineq = '';
-  for(let i = 0; i < count; i++){
-    ineq += sf(fracs[i]);
-    if(i < count-1){
-      let a = fracs[i].n/fracs[i].d, b = fracs[i+1].n/fracs[i+1].d;
-      ineq += a < b ? ' < ' : a > b ? ' > ' : ' = ';
-    }
+  let fs=fracs.slice(0,count);
+  let vals=fs.map((f,i)=>({val:f.n/f.d,i,f}));
+  let maxV=Math.max(...vals.map(v=>v.val));
+  let winners=vals.filter(v=>Math.abs(v.val-maxV)<1e-9);
+  let sf=f=>`${f.n}/${f.d}`;
+
+  // Olikhetstecken
+  let ineq='';
+  for(let i=0;i<count;i++){
+    ineq+=sf(fs[i]);
+    if(i<count-1){let a=fs[i].n/fs[i].d,b=fs[i+1].n/fs[i+1].d;ineq+=a<b?' < ':a>b?' > ':' = ';}
   }
-  let hint = '';
-  if(count === 2){
-    let a = fracs[0], b = fracs[1];
-    if(a.d === b.d) hint = 'Samma nämnare → lika stora bitar → jämför täljarna';
-    else if(a.n === b.n) hint = 'Samma täljare → lika många bitar → jämför nämnarna (fler delar = mindre bitar)';
-    else hint = 'Olika täljare och nämnare → jämför storlekarna i bilden';
+
+  // Decimalchips
+  let chips='';
+  for(let i=0;i<count;i++){
+    let f=fs[i];
+    chips+=`<div class="dec-chip">Bråk ${i+1}: <strong>${sf(f)}</strong> = ${fmt(f.n,f.d)}</div>`;
   }
-  document.getElementById('answerMain').textContent =
-    winners.length === count
-      ? 'Bråken är lika stora!'
-      : winners.map(w => `Bråk ${w.i+1} (${sf(w.f)})`).join(' & ') + ' är störst';
-  document.getElementById('answerSub').textContent = ineq + (hint ? ' · ' + hint : '');
+  document.getElementById('decimalsRow').innerHTML=chips;
+
+  // Strategi-hint + highlighting
+  let a=fs[0],b=fs[1];
+  let hint='',strat=0;
+  document.querySelectorAll('.strategy-item').forEach(el=>el.classList.remove('active'));
+  if(count===2){
+    if(a.d===b.d){hint='Strategi 1 → samma nämnare, bitarna är lika stora — täljaren bestämmer';strat=1}
+    else if(a.n===b.n){hint='Strategi 2 → samma täljare, antalet bitar är lika — nämnaren bestämmer';strat=2}
+    else{hint='Strategi 3 → jämför mot kända värden (½, ¾, 1 hel)';strat=3}
+    if(strat) document.getElementById('s'+strat).classList.add('active');
+  }
+
+  // Badge
+  const dotColors={1:'#306BF0',2:'#EC6095',3:'#f0a020'};
+  const dotEl=document.getElementById('stratDot');
+  const textEl=document.getElementById('stratText');
+  if(strat){
+    dotEl.style.background=dotColors[strat];
+    textEl.textContent=['','Strategi 1 – Samma nämnare','Strategi 2 – Samma täljare','Strategi 3 – Jämför mot kända värden'][strat];
+  } else {
+    dotEl.style.background='var(--border)';
+    textEl.textContent='Välj 2 bråk för strategitips';
+  }
+
+  document.getElementById('answerMain').textContent=
+    winners.length===count?'Bråken är lika stora!':
+    winners.map(w=>`Bråk ${w.i+1} (${sf(w.f)})`).join(' & ')+' är störst';
+  document.getElementById('answerIneq').textContent=ineq;
+  document.getElementById('answerHint').textContent=hint;
 }
 
-function setVal(idx, type, raw){
-  let v = Math.max(1, Math.min(12, +raw || 1));
-  if(type === 'd') fracs[idx].d = v;
-  else fracs[idx].n = Math.min(v, fracs[idx].d);
+// ── VALUES ───────────────────────────────────────────────
+function setVal(idx,type,raw){
+  let v=Math.max(1,Math.min(100,+raw||1));
+  if(type==='d') fracs[idx].d=v;
+  else fracs[idx].n=Math.min(v,fracs[idx].d);
   hideAnswer();
   renderBar(idx);
   renderInputs(idx);
   buildAnswer();
 }
 
+// ── PHASES ───────────────────────────────────────────────
 function resetPhase(idx){
-  phases[idx].delar = false;
-  phases[idx].taljare = false;
+  phases[idx]={delar:false,taljare:false};
   renderBar(idx);
   document.getElementById('pbD'+idx).classList.remove('on');
   document.getElementById('pbT'+idx).classList.remove('on');
 }
 
-function setPhase(idx, type){
-  if(type === 'delar'){
-    phases[idx].delar = !phases[idx].delar;
-    if(!phases[idx].delar) phases[idx].taljare = false;
+function setPhase(idx,type){
+  if(type==='delar'){
+    phases[idx].delar=!phases[idx].delar;
+    if(!phases[idx].delar) phases[idx].taljare=false;
   } else {
-    if(!phases[idx].delar) phases[idx].delar = true;
-    phases[idx].taljare = !phases[idx].taljare;
+    if(!phases[idx].delar) phases[idx].delar=true;
+    phases[idx].taljare=!phases[idx].taljare;
   }
   renderBar(idx);
-  document.getElementById('pbD'+idx).classList.toggle('on', phases[idx].delar);
-  document.getElementById('pbT'+idx).classList.toggle('on', phases[idx].taljare);
+  document.getElementById('pbD'+idx).classList.toggle('on',phases[idx].delar);
+  document.getElementById('pbT'+idx).classList.toggle('on',phases[idx].taljare);
 }
 
+// ── BARS ─────────────────────────────────────────────────
+function renderAllBars(){for(let i=0;i<count;i++) renderBar(i);}
+
 function renderBar(idx){
-  let bar = document.getElementById('bar'+idx);
-  let f = fracs[idx];
-  let p = phases[idx];
-  bar.innerHTML = '';
+  let bar=document.getElementById('bar'+idx);
+  let wrap=document.getElementById('barwrap'+idx);
+  let f=fracs[idx];
+  let p=phases[idx];
+  bar.innerHTML='';
+
   if(!p.delar){
-    let s = document.createElement('div');
-    s.style.cssText = 'flex:1;background:var(--surface2)';
+    let s=document.createElement('div');
+    s.style.cssText='flex:1;background:var(--surface2)';
     bar.appendChild(s);
-    return;
+  } else {
+    for(let s=0;s<f.d;s++){
+      let seg=document.createElement('div');
+      seg.className='seg '+(p.taljare&&s<f.n?'filled':'empty');
+      bar.appendChild(seg);
+    }
   }
-  for(let s = 0; s < f.d; s++){
-    let seg = document.createElement('div');
-    seg.className = 'seg ' + (p.taljare && s < f.n ? 'filled' : 'empty');
-    bar.appendChild(seg);
+
+  // Referenslinjer
+  let refLayer=document.getElementById('refl'+idx);
+  refLayer.innerHTML='';
+  for(let [key,def] of Object.entries(refDefs)){
+    if(!refs[key]) continue;
+    let pct=def.val*100;
+    let line=document.createElement('div');
+    line.className='ref-line';
+    line.style.cssText=`left:${pct}%;background:${def.color}`;
+    let lbl=document.createElement('div');
+    lbl.className='ref-label';
+    lbl.style.cssText=`left:${pct}%;color:${def.color}`;
+    lbl.textContent=def.label;
+    refLayer.appendChild(lbl);
+    refLayer.appendChild(line);
   }
 }
 
 function renderInputs(idx){
-  let f = fracs[idx];
-  let nn = document.getElementById('nd'+idx);
-  let dn = document.getElementById('dd'+idx);
-  if(nn) nn.value = f.n;
-  if(dn) dn.value = f.d;
+  let f=fracs[idx];
+  let nn=document.getElementById('nd'+idx);
+  let dn=document.getElementById('dd'+idx);
+  if(nn) nn.value=f.n;
+  if(dn) dn.value=f.d;
 }
 
+// ── RENDER ───────────────────────────────────────────────
 function render(){
-  let list = document.getElementById('fracList');
-  list.innerHTML = '';
-  for(let i = 0; i < count; i++){
-    let f = fracs[i];
-    let row = document.createElement('div');
-    row.className = 'frac-row';
-    row.id = 'row'+i;
-    row.innerHTML = `
+  let list=document.getElementById('fracList');
+  list.innerHTML='';
+  for(let i=0;i<count;i++){
+    let f=fracs[i];
+    let row=document.createElement('div');
+    row.className='frac-row';
+    row.id='row'+i;
+    row.innerHTML=`
       <div class="col-inputs">
-        <input class="num-box" type="number" id="nd${i}" min="1" max="12" value="${f.n}"
-          oninput="setVal(${i},'n',this.value)" onchange="setVal(${i},'n',this.value)">
+        <input class="num-box" type="text" inputmode="numeric" id="nd${i}" value="${f.n}"
+          onchange="setVal(${i},'n',this.value)">
         <div class="frac-divider"></div>
-        <input class="num-box" type="number" id="dd${i}" min="1" max="12" value="${f.d}"
-          oninput="setVal(${i},'d',this.value)" onchange="setVal(${i},'d',this.value)">
+        <input class="num-box" type="text" inputmode="numeric" id="dd${i}" value="${f.d}"
+          onchange="setVal(${i},'d',this.value)">
       </div>
       <div class="col-bar">
-        <div class="bar-track" id="bar${i}">
-          <div style="flex:1;background:var(--surface2)"></div>
+        <div class="bar-wrap" id="barwrap${i}">
+          <div class="bar-track" id="bar${i}">
+            <div style="flex:1;background:var(--surface2)"></div>
+          </div>
+          <div class="ref-lines" id="refl${i}"></div>
         </div>
         <div class="phase-btns">
           <button class="pb" id="pbD${i}" onclick="setPhase(${i},'delar')">Dela upp</button>
@@ -282,6 +535,99 @@ function render(){
 }
 
 render();
+
+// ── RITYTA ───────────────────────────────────────────────
+const canvas=document.getElementById('drawCanvas');
+const ctx=canvas.getContext('2d');
+let drawing=false;
+let tool='pen';
+let penColor='#306BF0';
+let penSize=4;
+let colorDots=document.querySelectorAll('.color-dot');
+
+function resizeCanvas(){
+  let rect=canvas.getBoundingClientRect();
+  let dpr=window.devicePixelRatio||1;
+  // Save image
+  let tmp=document.createElement('canvas');
+  tmp.width=canvas.width; tmp.height=canvas.height;
+  tmp.getContext('2d').drawImage(canvas,0,0);
+  canvas.width=rect.width*dpr;
+  canvas.height=rect.height*dpr;
+  ctx.scale(dpr,dpr);
+  ctx.drawImage(tmp,0,0,rect.width,rect.height);
+}
+window.addEventListener('resize',resizeCanvas);
+resizeCanvas();
+
+function getPos(e){
+  let rect=canvas.getBoundingClientRect();
+  let src=e.touches?e.touches[0]:e;
+  return {x:src.clientX-rect.left, y:src.clientY-rect.top};
+}
+
+function startDraw(e){
+  e.preventDefault();
+  drawing=true;
+  let p=getPos(e);
+  ctx.beginPath();
+  ctx.moveTo(p.x,p.y);
+}
+function moveDraw(e){
+  if(!drawing) return;
+  e.preventDefault();
+  let p=getPos(e);
+  ctx.lineTo(p.x,p.y);
+  if(tool==='eraser'){
+    ctx.globalCompositeOperation='destination-out';
+    ctx.lineWidth=penSize*5;
+  } else {
+    ctx.globalCompositeOperation='source-over';
+    ctx.strokeStyle=penColor;
+    ctx.lineWidth=penSize;
+  }
+  ctx.lineCap='round';
+  ctx.lineJoin='round';
+  ctx.stroke();
+  ctx.beginPath();
+  ctx.moveTo(p.x,p.y);
+}
+function endDraw(){drawing=false;}
+
+canvas.addEventListener('mousedown',startDraw);
+canvas.addEventListener('mousemove',moveDraw);
+canvas.addEventListener('mouseup',endDraw);
+canvas.addEventListener('mouseleave',endDraw);
+canvas.addEventListener('touchstart',startDraw,{passive:false});
+canvas.addEventListener('touchmove',moveDraw,{passive:false});
+canvas.addEventListener('touchend',endDraw);
+
+function setTool(t){
+  tool=t;
+  document.getElementById('toolPen').classList.toggle('active',t==='pen');
+  document.getElementById('toolEraser').classList.toggle('active',t==='eraser');
+}
+function setColor(c){
+  penColor=c;
+  tool='pen';
+  setTool('pen');
+  colorDots.forEach(d=>d.classList.toggle('active',d.style.background===c||d.title&&d.getAttribute('title')&&penColor===c));
+  // simpler: mark by matching
+  colorDots.forEach(d=>{
+    let dc=d.style.backgroundColor;
+    // compare hex loosely
+    d.classList.remove('active');
+  });
+  // find clicked dot
+  document.querySelectorAll('.color-dot').forEach(d=>{
+    // store color on element
+    if(d.getAttribute('onclick')===`setColor('${c}')`){d.classList.add('active');}
+  });
+}
+function setSize(s){penSize=s;}
+function clearCanvas(){
+  ctx.clearRect(0,0,canvas.width/window.devicePixelRatio,canvas.height/window.devicePixelRatio);
+}
 </script>
 </body>
 </html>
